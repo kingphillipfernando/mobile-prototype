@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stockroom — Laptop Parts Inventory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#E4E6DE;
+    --panel:#FAFAF6;
+    --panel-alt:#EDEFE7;
+    --ink:#20241F;
+    --ink-soft:#5B6259;
+    --line:#C7CABE;
+    --line-strong:#9CA096;
+    --amber:#B4790F;
+    --amber-bg:#F5E7C9;
+    --green:#33684A;
+    --green-bg:#DCE9DF;
+    --red:#A63C26;
+    --red-bg:#F2D9CF;
+    --accent:#2A5679;
+    --accent-bg:#D9E3E9;
+    --radius:3px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  .stencil{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;
+    letter-spacing:.02em;
+  }
+  .mono{ font-family:'IBM Plex Mono',monospace; }
+
+  #app{ max-width:1180px; margin:0 auto; padding:28px 20px 60px; }
+
+  /* ---------- header ---------- */
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:14px;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:16px;
+    margin-bottom:20px;
+  }
+  .brand h1{
+    font-size:34px;
+    text-transform:uppercase;
+    margin:0;
+    line-height:.9;
+  }
+  .brand p{
+    margin:6px 0 0;
+    color:var(--ink-soft);
+    font-size:13px;
+  }
+  .btn{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:13px;
+    border:1.5px solid var(--ink);
+    background:var(--ink);
+    color:var(--panel);
+    padding:10px 16px;
+    border-radius:var(--radius);
+    cursor:pointer;
+    transition:background .12s ease, color .12s ease;
+  }
+  .btn:hover{ background:#3A4136; }
+  .btn.ghost{ background:transparent; color:var(--ink); }
+  .btn.ghost:hover{ background:var(--panel-alt); }
+  .btn.small{ padding:6px 10px; font-size:12px; }
+  .btn.danger{ border-color:var(--red); color:var(--red); background:transparent; }
+  .btn.danger:hover{ background:var(--red-bg); }
+  .btn:disabled{ opacity:.45; cursor:default; }
+
+  /* ---------- stat tags ---------- */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .stat{
+    background:var(--panel);
+    padding:14px 16px 12px;
+    position:relative;
+    border-top:3px dashed var(--line-strong);
+  }
+  .stat .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:26px;
+    font-weight:600;
+    display:block;
+  }
+  .stat .label{
+    color:var(--ink-soft);
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    margin-top:2px;
+    display:block;
+  }
+  .stat.warn .num{ color:var(--amber); }
+  .stat.crit .num{ color:var(--red); }
+
+  /* ---------- layout ---------- */
+  .layout{ display:grid; grid-template-columns:200px 1fr; gap:22px; align-items:start; }
+  @media (max-width:760px){ .layout{ grid-template-columns:1fr; } }
+
+  .categories{ border:1px solid var(--line); background:var(--panel); }
+  .cat-item{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:10px 12px;
+    font-size:13px;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .cat-item:last-child{ border-bottom:none; }
+  .cat-item:hover{ background:var(--panel-alt); }
+  .cat-item.active{ background:var(--ink); color:var(--panel); }
+  .cat-item .count{ font-family:'IBM Plex Mono',monospace; font-size:12px; opacity:.75; }
+  @media (max-width:760px){
+    .categories{ display:flex; overflow-x:auto; border:none; gap:8px; }
+    .cat-item{ border:1px solid var(--line); white-space:nowrap; flex:0 0 auto; }
+  }
+
+  .main-panel{ position:relative; border:1px solid var(--line); background:var(--panel); }
+  .main-panel::before, .main-panel::after{
+    content:""; position:absolute; width:14px; height:14px; border:2px solid var(--accent);
+  }
+  .main-panel::before{ top:-2px; left:-2px; border-right:none; border-bottom:none; }
+  .main-panel::after{ bottom:-2px; right:-2px; border-left:none; border-top:none; }
+
+  .toolbar{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    padding:14px 16px; border-bottom:1px solid var(--line);
+  }
+  .search{
+    flex:1 1 220px;
+    padding:8px 10px;
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius);
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    background:#fff;
+  }
+  .toggle{
+    display:flex; align-items:center; gap:6px;
+    font-size:12.5px; color:var(--ink-soft); cursor:pointer; user-select:none;
+  }
+  .toggle input{ accent-color:var(--accent); }
+
+  /* ---------- table ---------- */
+  .table-wrap{ overflow-x:auto; }
+  table{ width:100%; border-collapse:collapse; min-width:820px; }
+  thead th{
+    text-align:left;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--ink-soft);
+    padding:10px 12px;
+    border-bottom:1px solid var(--line-strong);
+    white-space:nowrap;
+  }
+  tbody tr{ border-bottom:1px solid var(--line); }
+  tbody tr:nth-child(even){ background:var(--panel-alt); }
+  tbody td{ padding:10px 12px; vertical-align:middle; font-size:13px; }
+  td.sku{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-soft); }
+  td.name{ font-weight:500; }
+  td.name .cat-sub{ display:block; font-size:11.5px; color:var(--ink-soft); font-weight:400; }
+  td.num-cell{ font-family:'IBM Plex Mono',monospace; }
+
+  .qty-stepper{ display:flex; align-items:center; gap:6px; }
+  .qty-stepper button{
+    width:22px; height:22px; border:1px solid var(--line-strong); background:#fff;
+    cursor:pointer; font-family:'IBM Plex Mono',monospace; font-size:13px; line-height:1;
+    border-radius:2px;
+  }
+  .qty-stepper button:hover{ background:var(--panel-alt); }
+  .qty-stepper span{ min-width:26px; text-align:center; font-family:'IBM Plex Mono',monospace; }
+
+  .status{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12px; padding:3px 8px 3px 6px; border-radius:2px;
+  }
+  .status .dot{ width:8px; height:8px; border-radius:1px; display:inline-block; }
+  .status.ok{ background:var(--green-bg); color:var(--green); }
+  .status.ok .dot{ background:var(--green); }
+  .status.low{ background:var(--amber-bg); color:var(--amber); }
+  .status.low .dot{ background:var(--amber); }
+  .status.out{ background:var(--red-bg); color:var(--red); }
+  .status.out .dot{ background:var(--red); }
+
+  .row-actions{ display:flex; gap:6px; white-space:nowrap; }
+  .link-btn{
+    border:none; background:none; cursor:pointer; font-size:12px; font-weight:600;
+    color:var(--accent); padding:2px 4px;
+  }
+  .link-btn:hover{ text-decoration:underline; }
+  .link-btn.danger{ color:var(--red); }
+
+  /* ---------- form row ---------- */
+  .form-row td{ background:var(--accent-bg); padding:14px 12px; }
+  .form-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
+  }
+  @media (max-width:900px){ .form-grid{ grid-template-columns:repeat(2,1fr); } }
+  .field label{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:4px; }
+  .field input, .field select{
+    width:100%; padding:7px 8px; border:1px solid var(--line-strong); border-radius:2px;
+    font-family:'Inter',sans-serif; font-size:13px; background:#fff;
+  }
+  .form-actions{ margin-top:12px; display:flex; gap:8px; }
+
+  .empty-state{ padding:48px 20px; text-align:center; color:var(--ink-soft); }
+  .empty-state strong{ display:block; color:var(--ink); font-size:16px; margin-bottom:6px; }
+
+  .loading{ padding:60px 20px; text-align:center; color:var(--ink-soft); }
+  .footnote{ margin-top:16px; font-size:11.5px; color:var(--ink-soft); }
+</style>
+</head>
+<body>
+<div id="app"><div class="loading">Loading inventory…</div></div>
+
+<script>
+const CATEGORIES = [
+  "Chargers & Power","Batteries","Memory (RAM)","Storage (SSD/HDD)",
+  "Keyboards & Trackpads","Displays & Screens","Cables & Adapters",
+  "Cooling & Fans","Cases & Sleeves","Mice & Input","Other"
+];
+
+const SEED = [
+  {sku:"CHG-0451", name:"65W USB-C GaN Charger", category:"Chargers & Power", location:"A1-03", qty:14, reorderAt:10, unitCost:18.50},
+  {sku:"BAT-1187", name:"ThinkPad T14 Replacement Battery", category:"Batteries", location:"B2-01", qty:3, reorderAt:5, unitCost:42.00},
+  {sku:"RAM-2204", name:"16GB DDR4 SO-DIMM 3200MHz", category:"Memory (RAM)", location:"C1-06", qty:26, reorderAt:12, unitCost:34.75},
+  {sku:"SSD-3310", name:"1TB NVMe M.2 SSD", category:"Storage (SSD/HDD)", location:"C2-02", qty:0, reorderAt:8, unitCost:61.20},
+  {sku:"KEY-0092", name:"Backlit US Keyboard — 15in", category:"Keyboards & Trackpads", location:"D1-01", qty:9, reorderAt:6, unitCost:22.00},
+  {sku:"SCR-5581", name:"14in FHD IPS Screen Panel", category:"Displays & Screens", location:"D3-04", qty:4, reorderAt:5, unitCost:58.90},
+  {sku:"CAB-0027", name:"USB-C to HDMI Adapter", category:"Cables & Adapters", location:"A3-02", qty:41, reorderAt:15, unitCost:8.25},
+  {sku:"FAN-1140", name:"Laptop Cooling Fan Module", category:"Cooling & Fans", location:"E1-05", qty:7, reorderAt:6, unitCost:12.40},
+  {sku:"CSE-0810", name:"14in Neoprene Sleeve", category:"Cases & Sleeves", location:"F2-01", qty:32, reorderAt:10, unitCost:6.10},
+  {sku:"MOU-0334", name:"Wireless Travel Mouse", category:"Mice & Input", location:"F1-07", qty:18, reorderAt:10, unitCost:11.00}
+];
+
+let items = [];
+let selectedCategory = "All";
+let searchQuery = "";
+let lowStockOnly = false;
+let formMode = null;   // null | "new" | itemId being edited
+let draft = {};
+let confirmDeleteId = null;
+let loaded = false;
+
+const app = document.getElementById('app');
+
+async function init(){
+  try{
+    const res = await window.storage.get('inventory');
+    items = res && res.value ? JSON.parse(res.value) : null;
+    if(!items){
+      items = SEED.map((it,i)=>({ id:'p'+i, ...it }));
+      await persist();
+    }
+  }catch(e){
+    items = SEED.map((it,i)=>({ id:'p'+i, ...it }));
+    try{ await persist(); }catch(e2){ /* ignore, will retry on next change */ }
+  }
+  loaded = true;
+  render();
+}
+
+async function persist(){
+  try{
+    await window.storage.set('inventory', JSON.stringify(items));
+  }catch(e){
+    console.error('Storage error', e);
+  }
+}
+
+function statusOf(item){
+  if(item.qty <= 0) return {cls:'out', label:'Out of stock'};
+  if(item.qty <= item.reorderAt) return {cls:'low', label:'Low stock'};
+  return {cls:'ok', label:'In stock'};
+}
+
+function filteredItems(){
+  return items.filter(it=>{
+    if(selectedCategory !== "All" && it.category !== selectedCategory) return false;
+    if(lowStockOnly && it.qty > it.reorderAt) return false;
+    if(searchQuery){
+      const q = searchQuery.toLowerCase();
+      if(!it.name.toLowerCase().includes(q) && !it.sku.toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function categoryCounts(){
+  const map = {};
+  CATEGORIES.forEach(c=>map[c]=0);
+  items.forEach(it=>{ map[it.category] = (map[it.category]||0)+1; });
+  return map;
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function fmtMoney(n){ return '$' + Number(n).toFixed(2); }
+
+function render(){
+  if(!loaded){ app.innerHTML = '<div class="loading">Loading inventory…</div>'; return; }
+
+  const totalSkus = items.length;
+  const totalUnits = items.reduce((s,it)=>s+it.qty,0);
+  const needsReorder = items.filter(it=>it.qty<=it.reorderAt).length;
+  const totalValue = items.reduce((s,it)=>s+it.qty*it.unitCost,0);
+  const counts = categoryCounts();
+  const list = filteredItems();
+
+  app.innerHTML = `
+    <div class="topbar">
+      <div class="brand">
+        <h1 class="stencil">Stockroom</h1>
+        <p>Laptop accessories &amp; parts inventory</p>
+      </div>
+      <button class="btn" id="btn-add">+ Add part</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><span class="num">${totalSkus}</span><span class="label">SKUs tracked</span></div>
+      <div class="stat"><span class="num">${totalUnits}</span><span class="label">Units in stock</span></div>
+      <div class="stat ${needsReorder>0?'warn':''}"><span class="num">${needsReorder}</span><span class="label">Need reorder</span></div>
+      <div class="stat"><span class="num">${fmtMoney(totalValue)}</span><span class="label">Inventory value</span></div>
+    </div>
+
+    <div class="layout">
+      <div class="categories">
+        <div class="cat-item ${selectedCategory==='All'?'active':''}" data-cat="All">
+          <span>All parts</span><span class="count">${items.length}</span>
+        </div>
+        ${CATEGORIES.map(c=>`
+          <div class="cat-item ${selectedCategory===c?'active':''}" data-cat="${escapeHtml(c)}">
+            <span>${escapeHtml(c)}</span><span class="count">${counts[c]||0}</span>
+          </div>`).join('')}
+      </div>
+
+      <div class="main-panel">
+        <div class="toolbar">
+          <input class="search" id="search" type="text" placeholder="Search by name or SKU…" value="${escapeHtml(searchQuery)}">
+          <label class="toggle"><input type="checkbox" id="low-toggle" ${lowStockOnly?'checked':''}> Needs reorder only</label>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>SKU</th><th>Part</th><th>Location</th><th>Qty</th><th>Reorder at</th><th>Unit cost</th><th>Status</th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${formMode==='new' ? renderFormRow('new') : ''}
+              ${list.length===0 && formMode!=='new' ? `
+                <tr><td colspan="8"><div class="empty-state">
+                  <strong>No parts match</strong>
+                  Clear your search or filters, or add a new part to get started.
+                </div></td></tr>
+              ` : list.map(it => formMode===it.id ? renderFormRow(it.id) : renderRow(it)).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <p class="footnote">Saved privately to your account. Only you can see this inventory.</p>
+  `;
+
+  attachListeners();
+}
+
+function renderRow(it){
+  const st = statusOf(it);
+  return `
+    <tr data-id="${it.id}">
+      <td class="sku">${escapeHtml(it.sku)}</td>
+      <td class="name">${escapeHtml(it.name)}<span class="cat-sub">${escapeHtml(it.category)}</span></td>
+      <td>${escapeHtml(it.location||'—')}</td>
+      <td class="num-cell">
+        <div class="qty-stepper">
+          <button data-action="dec" data-id="${it.id}">−</button>
+          <span>${it.qty}</span>
+          <button data-action="inc" data-id="${it.id}">+</button>
+        </div>
+      </td>
+      <td class="num-cell">${it.reorderAt}</td>
+      <td class="num-cell">${fmtMoney(it.unitCost)}</td>
+      <td><span class="status ${st.cls}"><span class="dot"></span>${st.label}</span></td>
+      <td>
+        <div class="row-actions">
+          <button class="link-btn" data-action="edit" data-id="${it.id}">Edit</button>
+          <button class="link-btn danger" data-action="delete" data-id="${it.id}">
+            ${confirmDeleteId===it.id ? 'Confirm?' : 'Delete'}
+          </button>
+        </div>
+      </td>
+    </tr>
+  `;
+}
+
+function renderFormRow(mode){
+  const isNew = mode === 'new';
+  const d = isNew ? draft : draft;
+  return `
+    <tr class="form-row">
+      <td colspan="8">
+        <div class="form-grid">
+          <div class="field"><label>SKU</label><input id="f-sku" value="${escapeHtml(d.sku||'')}" placeholder="e.g. CHG-0001"></div>
+          <div class="field"><label>Part name</label><input id="f-name" value="${escapeHtml(d.name||'')}" placeholder="e.g. 65W USB-C Charger"></div>
+          <div class="field"><label>Category</label>
+            <select id="f-category">
+              ${CATEGORIES.map(c=>`<option value="${escapeHtml(c)}" ${d.category===c?'selected':''}>${escapeHtml(c)}</option>`).join('')}
+            </select>
+          </div>
+          <div class="field"><label>Bin location</label><input id="f-location" value="${escapeHtml(d.location||'')}" placeholder="e.g. A1-03"></div>
+          <div class="field"><label>Quantity</label><input id="f-qty" type="number" min="0" value="${d.qty ?? 0}"></div>
+          <div class="field"><label>Reorder at</label><input id="f-reorder" type="number" min="0" value="${d.reorderAt ?? 0}"></div>
+          <div class="field"><label>Unit cost ($)</label><input id="f-cost" type="number" min="0" step="0.01" value="${d.unitCost ?? 0}"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn small" id="f-save">Save part</button>
+          <button class="btn ghost small" id="f-cancel">Cancel</button>
+        </div>
+      </td>
+    </tr>
+  `;
+}
+
+function readDraftFromForm(){
+  draft.sku = document.getElementById('f-sku').value.trim();
+  draft.name = document.getElementById('f-name').value.trim();
+  draft.category = document.getElementById('f-category').value;
+  draft.location = document.getElementById('f-location').value.trim();
+  draft.qty = parseInt(document.getElementById('f-qty').value,10) || 0;
+  draft.reorderAt = parseInt(document.getElementById('f-reorder').value,10) || 0;
+  draft.unitCost = parseFloat(document.getElementById('f-cost').value) || 0;
+}
+
+function attachListeners(){
+  const addBtn = document.getElementById('btn-add');
+  if(addBtn) addBtn.onclick = ()=>{
+    formMode = 'new';
+    draft = { sku:'', name:'', category:CATEGORIES[0], location:'', qty:0, reorderAt:0, unitCost:0 };
+    render();
+  };
+
+  document.querySelectorAll('.cat-item').forEach(el=>{
+    el.onclick = ()=>{ selectedCategory = el.dataset.cat; formMode=null; render(); };
+  });
+
+  const search = document.getElementById('search');
+  if(search){
+    search.oninput = ()=>{ searchQuery = search.value; };
+    search.addEventListener('input', debounce(()=>render(), 220));
+    // keep focus after debounce render
+    search.addEventListener('focus', ()=>{ search.setSelectionRange(search.value.length, search.value.length); });
+  }
+
+  const lowToggle = document.getElementById('low-toggle');
+  if(lowToggle) lowToggle.onchange = ()=>{ lowStockOnly = lowToggle.checked; render(); };
+
+  document.querySelectorAll('[data-action="inc"]').forEach(b=>{
+    b.onclick = ()=>{ changeQty(b.dataset.id, 1); };
+  });
+  document.querySelectorAll('[data-action="dec"]').forEach(b=>{
+    b.onclick = ()=>{ changeQty(b.dataset.id, -1); };
+  });
+  document.querySelectorAll('[data-action="edit"]').forEach(b=>{
+    b.onclick = ()=>{
+      const it = items.find(x=>x.id===b.dataset.id);
+      draft = { ...it };
+      formMode = it.id;
+      confirmDeleteId = null;
+      render();
+    };
+  });
+  document.querySelectorAll('[data-action="delete"]').forEach(b=>{
+    b.onclick = ()=>{
+      if(confirmDeleteId === b.dataset.id){
+        items = items.filter(x=>x.id!==b.dataset.id);
+        confirmDeleteId = null;
+        persist();
+        render();
+      }else{
+        confirmDeleteId = b.dataset.id;
+        render();
+        setTimeout(()=>{ if(confirmDeleteId===b.dataset.id){ confirmDeleteId=null; render(); } }, 3000);
+      }
+    };
+  });
+
+  const saveBtn = document.getElementById('f-save');
+  if(saveBtn) saveBtn.onclick = ()=>{
+    readDraftFromForm();
+    if(!draft.name){ document.getElementById('f-name').focus(); return; }
+    if(formMode === 'new'){
+      items.push({ id: 'p'+Date.now(), ...draft });
+    }else{
+      const idx = items.findIndex(x=>x.id===formMode);
+      if(idx>-1) items[idx] = { ...items[idx], ...draft };
+    }
+    formMode = null;
+    persist();
+    render();
+  };
+  const cancelBtn = document.getElementById('f-cancel');
+  if(cancelBtn) cancelBtn.onclick = ()=>{ formMode = null; render(); };
+}
+
+function changeQty(id, delta){
+  const it = items.find(x=>x.id===id);
+  if(!it) return;
+  it.qty = Math.max(0, it.qty + delta);
+  persist();
+  render();
+}
+
+function debounce(fn, ms){
+  let t;
+  return (...args)=>{ clearTimeout(t); t = setTimeout(()=>fn(...args), ms); };
+}
+
+init();
+</script>
+</body>
+</html>
