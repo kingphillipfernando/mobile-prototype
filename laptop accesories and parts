@@ -35,101 +35,55 @@
     line-height:1.45;
     -webkit-font-smoothing:antialiased;
   }
-  .stencil{
-    font-family:'Barlow Condensed',sans-serif;
-    font-weight:700;
-    letter-spacing:.02em;
-  }
+  .stencil{ font-family:'Barlow Condensed',sans-serif; font-weight:700; letter-spacing:.02em; }
   .mono{ font-family:'IBM Plex Mono',monospace; }
 
-  #app{ max-width:1180px; margin:0 auto; padding:28px 20px 60px; }
+  #app{ max-width:1220px; margin:0 auto; padding:28px 20px 60px; }
+  @media (max-width:600px){
+    #app{ padding:16px 12px 40px; }
+    input, select, textarea{ font-size:16px !important; }
+  }
 
-  /* ---------- header ---------- */
   .topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    flex-wrap:wrap;
-    gap:14px;
-    border-bottom:2px solid var(--ink);
-    padding-bottom:16px;
-    margin-bottom:20px;
+    display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:14px;
+    border-bottom:2px solid var(--ink); padding-bottom:16px; margin-bottom:20px;
   }
-  .brand h1{
-    font-size:34px;
-    text-transform:uppercase;
-    margin:0;
-    line-height:.9;
+  .brand-block h1{ font-size:34px; text-transform:uppercase; margin:0; line-height:.9; }
+  .brand-block p{ margin:6px 0 0; color:var(--ink-soft); font-size:13px; }
+  @media (max-width:600px){
+    .brand-block h1{ font-size:28px; }
+    .topbar{ flex-direction:column; align-items:stretch; }
+    #btn-add{ width:100%; padding:13px 16px; font-size:14px; }
   }
-  .brand p{
-    margin:6px 0 0;
-    color:var(--ink-soft);
-    font-size:13px;
-  }
+
   .btn{
-    font-family:'Inter',sans-serif;
-    font-weight:600;
-    font-size:13px;
-    border:1.5px solid var(--ink);
-    background:var(--ink);
-    color:var(--panel);
-    padding:10px 16px;
-    border-radius:var(--radius);
-    cursor:pointer;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:13px;
+    border:1.5px solid var(--ink); background:var(--ink); color:var(--panel);
+    padding:10px 16px; border-radius:var(--radius); cursor:pointer;
     transition:background .12s ease, color .12s ease;
   }
   .btn:hover{ background:#3A4136; }
   .btn.ghost{ background:transparent; color:var(--ink); }
   .btn.ghost:hover{ background:var(--panel-alt); }
   .btn.small{ padding:6px 10px; font-size:12px; }
-  .btn.danger{ border-color:var(--red); color:var(--red); background:transparent; }
-  .btn.danger:hover{ background:var(--red-bg); }
   .btn:disabled{ opacity:.45; cursor:default; }
 
-  /* ---------- stat tags ---------- */
   .stats{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-    gap:1px;
-    background:var(--line);
-    border:1px solid var(--line);
-    margin-bottom:24px;
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px;
+    background:var(--line); border:1px solid var(--line); margin-bottom:24px;
   }
-  .stat{
-    background:var(--panel);
-    padding:14px 16px 12px;
-    position:relative;
-    border-top:3px dashed var(--line-strong);
-  }
-  .stat .num{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:26px;
-    font-weight:600;
-    display:block;
-  }
-  .stat .label{
-    color:var(--ink-soft);
-    font-size:11.5px;
-    text-transform:uppercase;
-    letter-spacing:.06em;
-    margin-top:2px;
-    display:block;
-  }
+  .stat{ background:var(--panel); padding:14px 16px 12px; border-top:3px dashed var(--line-strong); }
+  .stat .num{ font-family:'IBM Plex Mono',monospace; font-size:26px; font-weight:600; display:block; }
+  .stat .label{ color:var(--ink-soft); font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; margin-top:2px; display:block; }
   .stat.warn .num{ color:var(--amber); }
-  .stat.crit .num{ color:var(--red); }
 
-  /* ---------- layout ---------- */
   .layout{ display:grid; grid-template-columns:200px 1fr; gap:22px; align-items:start; }
   @media (max-width:760px){ .layout{ grid-template-columns:1fr; } }
 
   .categories{ border:1px solid var(--line); background:var(--panel); }
   .cat-item{
-    display:flex; justify-content:space-between; align-items:center;
-    padding:10px 12px;
-    font-size:13px;
-    border-bottom:1px solid var(--line);
-    cursor:pointer;
-    color:var(--ink);
+    display:flex; justify-content:space-between; align-items:center; padding:10px 12px;
+    font-size:13px; border-bottom:1px solid var(--line); cursor:pointer; color:var(--ink);
   }
   .cat-item:last-child{ border-bottom:none; }
   .cat-item:hover{ background:var(--panel-alt); }
@@ -141,65 +95,51 @@
   }
 
   .main-panel{ position:relative; border:1px solid var(--line); background:var(--panel); }
-  .main-panel::before, .main-panel::after{
-    content:""; position:absolute; width:14px; height:14px; border:2px solid var(--accent);
-  }
+  .main-panel::before, .main-panel::after{ content:""; position:absolute; width:14px; height:14px; border:2px solid var(--accent); }
   .main-panel::before{ top:-2px; left:-2px; border-right:none; border-bottom:none; }
   .main-panel::after{ bottom:-2px; right:-2px; border-left:none; border-top:none; }
 
-  .toolbar{
-    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-    padding:14px 16px; border-bottom:1px solid var(--line);
-  }
-  .search{
-    flex:1 1 220px;
-    padding:8px 10px;
-    border:1px solid var(--line-strong);
-    border-radius:var(--radius);
-    font-family:'Inter',sans-serif;
-    font-size:13px;
-    background:#fff;
-  }
-  .toggle{
-    display:flex; align-items:center; gap:6px;
-    font-size:12.5px; color:var(--ink-soft); cursor:pointer; user-select:none;
-  }
+  .toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; padding:14px 16px; border-bottom:1px solid var(--line); }
+  .search{ flex:1 1 220px; padding:8px 10px; border:1px solid var(--line-strong); border-radius:var(--radius); font-size:13px; background:#fff; }
+  .toggle{ display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink-soft); cursor:pointer; user-select:none; }
   .toggle input{ accent-color:var(--accent); }
 
-  /* ---------- table ---------- */
-  .table-wrap{ overflow-x:auto; }
-  table{ width:100%; border-collapse:collapse; min-width:820px; }
+  .table-wrap{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  table{ width:100%; border-collapse:collapse; min-width:900px; }
   thead th{
-    text-align:left;
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:.05em;
-    color:var(--ink-soft);
-    padding:10px 12px;
-    border-bottom:1px solid var(--line-strong);
-    white-space:nowrap;
+    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-soft); padding:10px 12px; border-bottom:1px solid var(--line-strong); white-space:nowrap;
   }
   tbody tr{ border-bottom:1px solid var(--line); }
   tbody tr:nth-child(even){ background:var(--panel-alt); }
   tbody td{ padding:10px 12px; vertical-align:middle; font-size:13px; }
-  td.sku{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-soft); }
-  td.name{ font-weight:500; }
-  td.name .cat-sub{ display:block; font-size:11.5px; color:var(--ink-soft); font-weight:400; }
   td.num-cell{ font-family:'IBM Plex Mono',monospace; }
+
+  .thumb{
+    width:40px; height:40px; border:1px solid var(--line-strong); border-radius:2px;
+    background:var(--panel-alt); display:flex; align-items:center; justify-content:center;
+    overflow:hidden; flex:0 0 auto; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--ink-soft);
+  }
+  .thumb img{ width:100%; height:100%; object-fit:cover; }
+  .prod-cell{ display:flex; align-items:center; gap:10px; }
+  .prod-text .pname{ font-weight:500; }
+  .prod-text .pbrand{ display:block; font-size:11.5px; color:var(--ink-soft); }
+  .compat{ color:var(--ink-soft); font-size:12.5px; max-width:220px; }
+  .cat-tag{
+    display:inline-block; font-size:11px; padding:2px 6px; border:1px solid var(--line-strong);
+    border-radius:2px; color:var(--ink-soft); margin-top:2px;
+  }
 
   .qty-stepper{ display:flex; align-items:center; gap:6px; }
   .qty-stepper button{
-    width:22px; height:22px; border:1px solid var(--line-strong); background:#fff;
-    cursor:pointer; font-family:'IBM Plex Mono',monospace; font-size:13px; line-height:1;
-    border-radius:2px;
+    width:22px; height:22px; border:1px solid var(--line-strong); background:#fff; cursor:pointer;
+    font-family:'IBM Plex Mono',monospace; font-size:13px; line-height:1; border-radius:2px;
   }
   .qty-stepper button:hover{ background:var(--panel-alt); }
   .qty-stepper span{ min-width:26px; text-align:center; font-family:'IBM Plex Mono',monospace; }
+  @media (max-width:600px){ .qty-stepper button{ width:30px; height:30px; font-size:16px; } }
 
-  .status{
-    display:inline-flex; align-items:center; gap:6px;
-    font-size:12px; padding:3px 8px 3px 6px; border-radius:2px;
-  }
+  .status{ display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:3px 8px 3px 6px; border-radius:2px; }
   .status .dot{ width:8px; height:8px; border-radius:1px; display:inline-block; }
   .status.ok{ background:var(--green-bg); color:var(--green); }
   .status.ok .dot{ background:var(--green); }
@@ -209,29 +149,47 @@
   .status.out .dot{ background:var(--red); }
 
   .row-actions{ display:flex; gap:6px; white-space:nowrap; }
-  .link-btn{
-    border:none; background:none; cursor:pointer; font-size:12px; font-weight:600;
-    color:var(--accent); padding:2px 4px;
-  }
+  .link-btn{ border:none; background:none; cursor:pointer; font-size:12px; font-weight:600; color:var(--accent); padding:2px 4px; }
   .link-btn:hover{ text-decoration:underline; }
   .link-btn.danger{ color:var(--red); }
 
-  /* ---------- form row ---------- */
   .form-row td{ background:var(--accent-bg); padding:14px 12px; }
-  .form-grid{
-    display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
+  .form-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .form-grid .field.wide{ grid-column:span 2; }
+  @media (max-width:900px){ .form-grid{ grid-template-columns:repeat(2,1fr); } .form-grid .field.wide{ grid-column:span 2; } }
+  @media (max-width:600px){
+    .form-grid{ grid-template-columns:1fr; }
+    .form-grid .field.wide{ grid-column:span 1; }
+    .form-actions{ flex-direction:column; }
+    .form-actions .btn{ width:100%; text-align:center; }
   }
-  @media (max-width:900px){ .form-grid{ grid-template-columns:repeat(2,1fr); } }
   .field label{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:4px; }
-  .field input, .field select{
-    width:100%; padding:7px 8px; border:1px solid var(--line-strong); border-radius:2px;
-    font-family:'Inter',sans-serif; font-size:13px; background:#fff;
+  .field input, .field select, .field textarea{
+    width:100%; padding:7px 8px; border:1px solid var(--line-strong); border-radius:2px; font-family:'Inter',sans-serif; font-size:13px; background:#fff;
   }
+  .field textarea{ resize:vertical; min-height:38px; }
   .form-actions{ margin-top:12px; display:flex; gap:8px; }
+
+  @media (max-width:640px){
+    .table-wrap{ overflow-x:visible; }
+    table{ min-width:0; }
+    thead{ display:none; }
+    tbody tr{ display:block; border:1px solid var(--line); margin:0 0 10px; border-radius:2px; }
+    tbody tr:nth-child(even){ background:var(--panel); }
+    tbody td{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:9px 12px; border-bottom:1px solid var(--line); }
+    tbody td:last-child{ border-bottom:none; }
+    tbody td[data-label]:not([data-label=""])::before{
+      content: attr(data-label); font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); flex:0 0 auto; margin-right:auto;
+    }
+    tbody td.prod-td{ flex-direction:column; align-items:flex-start; gap:6px; }
+    tbody td.prod-td::before{ margin-right:0; }
+    .row-actions{ width:100%; justify-content:flex-end; }
+    .empty-state{ padding:36px 12px; }
+    .form-row td{ display:block; }
+  }
 
   .empty-state{ padding:48px 20px; text-align:center; color:var(--ink-soft); }
   .empty-state strong{ display:block; color:var(--ink); font-size:16px; margin-bottom:6px; }
-
   .loading{ padding:60px 20px; text-align:center; color:var(--ink-soft); }
   .footnote{ margin-top:16px; font-size:11.5px; color:var(--ink-soft); }
 </style>
@@ -241,72 +199,80 @@
 
 <script>
 const CATEGORIES = [
-  "Chargers & Power","Batteries","Memory (RAM)","Storage (SSD/HDD)",
-  "Keyboards & Trackpads","Displays & Screens","Cables & Adapters",
-  "Cooling & Fans","Cases & Sleeves","Mice & Input","Other"
+  "RAM","Storage","Cooling","Battery","Keyboard","Power Adapter",
+  "Network Card","Display","Cables & Adapters","Mice & Input","Other"
 ];
-
-const SEED = [
-  {sku:"CHG-0451", name:"65W USB-C GaN Charger", category:"Chargers & Power", location:"A1-03", qty:14, reorderAt:10, unitCost:18.50},
-  {sku:"BAT-1187", name:"ThinkPad T14 Replacement Battery", category:"Batteries", location:"B2-01", qty:3, reorderAt:5, unitCost:42.00},
-  {sku:"RAM-2204", name:"16GB DDR4 SO-DIMM 3200MHz", category:"Memory (RAM)", location:"C1-06", qty:26, reorderAt:12, unitCost:34.75},
-  {sku:"SSD-3310", name:"1TB NVMe M.2 SSD", category:"Storage (SSD/HDD)", location:"C2-02", qty:0, reorderAt:8, unitCost:61.20},
-  {sku:"KEY-0092", name:"Backlit US Keyboard — 15in", category:"Keyboards & Trackpads", location:"D1-01", qty:9, reorderAt:6, unitCost:22.00},
-  {sku:"SCR-5581", name:"14in FHD IPS Screen Panel", category:"Displays & Screens", location:"D3-04", qty:4, reorderAt:5, unitCost:58.90},
-  {sku:"CAB-0027", name:"USB-C to HDMI Adapter", category:"Cables & Adapters", location:"A3-02", qty:41, reorderAt:15, unitCost:8.25},
-  {sku:"FAN-1140", name:"Laptop Cooling Fan Module", category:"Cooling & Fans", location:"E1-05", qty:7, reorderAt:6, unitCost:12.40},
-  {sku:"CSE-0810", name:"14in Neoprene Sleeve", category:"Cases & Sleeves", location:"F2-01", qty:32, reorderAt:10, unitCost:6.10},
-  {sku:"MOU-0334", name:"Wireless Travel Mouse", category:"Mice & Input", location:"F1-07", qty:18, reorderAt:10, unitCost:11.00}
-];
+const LOW_STOCK_THRESHOLD = 6;
 
 let items = [];
 let selectedCategory = "All";
 let searchQuery = "";
 let lowStockOnly = false;
-let formMode = null;   // null | "new" | itemId being edited
+let formMode = null;
 let draft = {};
 let confirmDeleteId = null;
 let loaded = false;
 
 const app = document.getElementById('app');
 
+const STORAGE_KEY = 'stockroom-laptop-parts';
+
+const SEED = [
+  { product_name: '8GB DDR4 RAM', brand: 'Kingston', category: 'RAM', model_compatibility: 'Lenovo IdeaPad, HP Pavilion', price: 1450.00, stock_quantity: 20, image: 'ram8gb.jpg', description: '8GB DDR4 SODIMM memory module for compatible laptops.' },
+  { product_name: '16GB DDR4 RAM', brand: 'Crucial', category: 'RAM', model_compatibility: 'ASUS VivoBook, Acer Aspire', price: 2850.00, stock_quantity: 15, image: 'ram16gb.jpg', description: '16GB DDR4 laptop memory suitable for upgrading system performance.' },
+  { product_name: '512GB SATA SSD', brand: 'Samsung', category: 'Storage', model_compatibility: 'Dell Inspiron, HP 15 Series', price: 3950.00, stock_quantity: 10, image: 'samsung512ssd.jpg', description: '512GB SATA solid state drive for faster storage and boot times.' },
+  { product_name: '1TB NVMe SSD', brand: 'Western Digital', category: 'Storage', model_compatibility: 'Lenovo Legion, ASUS TUF', price: 4250.00, stock_quantity: 12, image: 'wd1tbssd.jpg', description: '1TB NVMe PCIe SSD designed for high-speed laptop storage.' },
+  { product_name: 'Laptop Cooling Fan', brand: 'Cooler Master', category: 'Cooling', model_compatibility: 'Universal 15.6-inch Laptops', price: 1250.00, stock_quantity: 18, image: 'coolingfan.jpg', description: 'USB-powered cooling pad designed to help reduce laptop temperature.' },
+  { product_name: 'Laptop Battery', brand: 'Lenovo', category: 'Battery', model_compatibility: 'Lenovo IdeaPad 3', price: 3200.00, stock_quantity: 8, image: 'lenovobattery.jpg', description: 'Replacement battery compatible with selected Lenovo IdeaPad models.' },
+  { product_name: 'Laptop Keyboard', brand: 'Dell', category: 'Keyboard', model_compatibility: 'Dell Inspiron 15 3000', price: 950.00, stock_quantity: 14, image: 'dellkeyboard.jpg', description: 'Replacement keyboard for compatible Dell Inspiron laptops.' },
+  { product_name: '65W Laptop Charger', brand: 'UGREEN', category: 'Power Adapter', model_compatibility: 'USB-C Compatible Laptops', price: 2200.00, stock_quantity: 16, image: 'ugreencharger.jpg', description: '65W USB-C power adapter suitable for compatible laptops and devices.' },
+  { product_name: 'Wi-Fi 6 Wireless Card', brand: 'Intel', category: 'Network Card', model_compatibility: 'M.2 Compatible Laptops', price: 1750.00, stock_quantity: 11, image: 'intelwifi6.jpg', description: 'Intel Wi-Fi 6 wireless adapter with Bluetooth support.' },
+  { product_name: 'Laptop LCD Screen 15.6"', brand: 'ASUS', category: 'Display', model_compatibility: 'ASUS X515 Series', price: 4800.00, stock_quantity: 5, image: 'asuslcd156.jpg', description: '15.6-inch replacement LCD display for compatible ASUS laptops.' }
+];
+
 async function init(){
   try{
-    const res = await window.storage.get('inventory');
-    items = res && res.value ? JSON.parse(res.value) : null;
+    const raw = localStorage.getItem(STORAGE_KEY);
+    items = raw ? JSON.parse(raw) : null;
     if(!items){
-      items = SEED.map((it,i)=>({ id:'p'+i, ...it }));
-      await persist();
+      items = SEED.map((it,i)=>({ id:i+1, ...it }));
+      persist();
     }
   }catch(e){
-    items = SEED.map((it,i)=>({ id:'p'+i, ...it }));
-    try{ await persist(); }catch(e2){ /* ignore, will retry on next change */ }
+    console.error('Storage error', e);
+    items = SEED.map((it,i)=>({ id:i+1, ...it }));
+    try{ persist(); }catch(e2){ /* ignore */ }
   }
   loaded = true;
   render();
 }
 
-async function persist(){
+function persist(){
   try{
-    await window.storage.set('inventory', JSON.stringify(items));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }catch(e){
     console.error('Storage error', e);
   }
 }
 
+function nextId(){
+  return items.length ? Math.max(...items.map(it=>it.id)) + 1 : 1;
+}
+
 function statusOf(item){
-  if(item.qty <= 0) return {cls:'out', label:'Out of stock'};
-  if(item.qty <= item.reorderAt) return {cls:'low', label:'Low stock'};
+  if(item.stock_quantity <= 0) return {cls:'out', label:'Out of stock'};
+  if(item.stock_quantity <= LOW_STOCK_THRESHOLD) return {cls:'low', label:'Low stock'};
   return {cls:'ok', label:'In stock'};
 }
 
 function filteredItems(){
   return items.filter(it=>{
     if(selectedCategory !== "All" && it.category !== selectedCategory) return false;
-    if(lowStockOnly && it.qty > it.reorderAt) return false;
+    if(lowStockOnly && it.stock_quantity > LOW_STOCK_THRESHOLD) return false;
     if(searchQuery){
       const q = searchQuery.toLowerCase();
-      if(!it.name.toLowerCase().includes(q) && !it.sku.toLowerCase().includes(q)) return false;
+      const hay = [it.product_name, it.brand, it.model_compatibility, it.description].join(' ').toLowerCase();
+      if(!hay.includes(q)) return false;
     }
     return true;
   });
@@ -320,24 +286,23 @@ function categoryCounts(){
 }
 
 function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-
-function fmtMoney(n){ return '$' + Number(n).toFixed(2); }
+function fmtMoney(n){ return '₱' + Number(n).toLocaleString('en-PH', {minimumFractionDigits:2, maximumFractionDigits:2}); }
 
 function render(){
   if(!loaded){ app.innerHTML = '<div class="loading">Loading inventory…</div>'; return; }
 
   const totalSkus = items.length;
-  const totalUnits = items.reduce((s,it)=>s+it.qty,0);
-  const needsReorder = items.filter(it=>it.qty<=it.reorderAt).length;
-  const totalValue = items.reduce((s,it)=>s+it.qty*it.unitCost,0);
+  const totalUnits = items.reduce((s,it)=>s+it.stock_quantity,0);
+  const needsReorder = items.filter(it=>it.stock_quantity<=LOW_STOCK_THRESHOLD).length;
+  const totalValue = items.reduce((s,it)=>s+it.stock_quantity*it.price,0);
   const counts = categoryCounts();
   const list = filteredItems();
 
   app.innerHTML = `
     <div class="topbar">
-      <div class="brand">
+      <div class="brand-block">
         <h1 class="stencil">Stockroom</h1>
         <p>Laptop accessories &amp; parts inventory</p>
       </div>
@@ -345,7 +310,7 @@ function render(){
     </div>
 
     <div class="stats">
-      <div class="stat"><span class="num">${totalSkus}</span><span class="label">SKUs tracked</span></div>
+      <div class="stat"><span class="num">${totalSkus}</span><span class="label">Products tracked</span></div>
       <div class="stat"><span class="num">${totalUnits}</span><span class="label">Units in stock</span></div>
       <div class="stat ${needsReorder>0?'warn':''}"><span class="num">${needsReorder}</span><span class="label">Need reorder</span></div>
       <div class="stat"><span class="num">${fmtMoney(totalValue)}</span><span class="label">Inventory value</span></div>
@@ -364,20 +329,20 @@ function render(){
 
       <div class="main-panel">
         <div class="toolbar">
-          <input class="search" id="search" type="text" placeholder="Search by name or SKU…" value="${escapeHtml(searchQuery)}">
+          <input class="search" id="search" type="text" placeholder="Search by name, brand, or compatibility…" value="${escapeHtml(searchQuery)}">
           <label class="toggle"><input type="checkbox" id="low-toggle" ${lowStockOnly?'checked':''}> Needs reorder only</label>
         </div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>SKU</th><th>Part</th><th>Location</th><th>Qty</th><th>Reorder at</th><th>Unit cost</th><th>Status</th><th></th>
+                <th>Product</th><th>Compatibility</th><th>Price</th><th>Stock</th><th>Status</th><th></th>
               </tr>
             </thead>
             <tbody>
               ${formMode==='new' ? renderFormRow('new') : ''}
               ${list.length===0 && formMode!=='new' ? `
-                <tr><td colspan="8"><div class="empty-state">
+                <tr><td colspan="6"><div class="empty-state">
                   <strong>No parts match</strong>
                   Clear your search or filters, or add a new part to get started.
                 </div></td></tr>
@@ -387,7 +352,7 @@ function render(){
         </div>
       </div>
     </div>
-    <p class="footnote">Saved privately to your account. Only you can see this inventory.</p>
+    <p class="footnote">Saved in this browser only. Clearing your browser data will erase it — use the same browser and device each time.</p>
   `;
 
   attachListeners();
@@ -397,20 +362,27 @@ function renderRow(it){
   const st = statusOf(it);
   return `
     <tr data-id="${it.id}">
-      <td class="sku">${escapeHtml(it.sku)}</td>
-      <td class="name">${escapeHtml(it.name)}<span class="cat-sub">${escapeHtml(it.category)}</span></td>
-      <td>${escapeHtml(it.location||'—')}</td>
-      <td class="num-cell">
+      <td class="prod-td" data-label="Product">
+        <div class="prod-cell">
+          <div class="thumb">${it.image ? `<img src="images/${escapeHtml(it.image)}" alt="" onerror="this.parentElement.textContent='IMG';">` : 'IMG'}</div>
+          <div class="prod-text">
+            <span class="pname">${escapeHtml(it.product_name)}</span>
+            <span class="pbrand">${escapeHtml(it.brand||'—')}</span>
+            <span class="cat-tag">${escapeHtml(it.category)}</span>
+          </div>
+        </div>
+      </td>
+      <td class="compat" data-label="Compatibility">${escapeHtml(it.model_compatibility||'—')}</td>
+      <td class="num-cell" data-label="Price">${fmtMoney(it.price)}</td>
+      <td class="num-cell" data-label="Stock">
         <div class="qty-stepper">
           <button data-action="dec" data-id="${it.id}">−</button>
-          <span>${it.qty}</span>
+          <span>${it.stock_quantity}</span>
           <button data-action="inc" data-id="${it.id}">+</button>
         </div>
       </td>
-      <td class="num-cell">${it.reorderAt}</td>
-      <td class="num-cell">${fmtMoney(it.unitCost)}</td>
-      <td><span class="status ${st.cls}"><span class="dot"></span>${st.label}</span></td>
-      <td>
+      <td data-label="Status"><span class="status ${st.cls}"><span class="dot"></span>${st.label}</span></td>
+      <td data-label="">
         <div class="row-actions">
           <button class="link-btn" data-action="edit" data-id="${it.id}">Edit</button>
           <button class="link-btn danger" data-action="delete" data-id="${it.id}">
@@ -423,23 +395,23 @@ function renderRow(it){
 }
 
 function renderFormRow(mode){
-  const isNew = mode === 'new';
-  const d = isNew ? draft : draft;
+  const d = draft;
   return `
     <tr class="form-row">
-      <td colspan="8">
+      <td colspan="6">
         <div class="form-grid">
-          <div class="field"><label>SKU</label><input id="f-sku" value="${escapeHtml(d.sku||'')}" placeholder="e.g. CHG-0001"></div>
-          <div class="field"><label>Part name</label><input id="f-name" value="${escapeHtml(d.name||'')}" placeholder="e.g. 65W USB-C Charger"></div>
+          <div class="field"><label>Product name</label><input id="f-name" value="${escapeHtml(d.product_name||'')}" placeholder="e.g. 8GB DDR4 RAM"></div>
+          <div class="field"><label>Brand</label><input id="f-brand" value="${escapeHtml(d.brand||'')}" placeholder="e.g. Kingston"></div>
           <div class="field"><label>Category</label>
             <select id="f-category">
               ${CATEGORIES.map(c=>`<option value="${escapeHtml(c)}" ${d.category===c?'selected':''}>${escapeHtml(c)}</option>`).join('')}
             </select>
           </div>
-          <div class="field"><label>Bin location</label><input id="f-location" value="${escapeHtml(d.location||'')}" placeholder="e.g. A1-03"></div>
-          <div class="field"><label>Quantity</label><input id="f-qty" type="number" min="0" value="${d.qty ?? 0}"></div>
-          <div class="field"><label>Reorder at</label><input id="f-reorder" type="number" min="0" value="${d.reorderAt ?? 0}"></div>
-          <div class="field"><label>Unit cost ($)</label><input id="f-cost" type="number" min="0" step="0.01" value="${d.unitCost ?? 0}"></div>
+          <div class="field"><label>Price (₱)</label><input id="f-price" type="number" min="0" step="0.01" value="${d.price ?? 0}"></div>
+          <div class="field wide"><label>Model compatibility</label><input id="f-compat" value="${escapeHtml(d.model_compatibility||'')}" placeholder="e.g. Lenovo IdeaPad, HP Pavilion"></div>
+          <div class="field"><label>Stock quantity</label><input id="f-qty" type="number" min="0" value="${d.stock_quantity ?? 0}"></div>
+          <div class="field"><label>Image filename</label><input id="f-image" value="${escapeHtml(d.image||'')}" placeholder="e.g. ram8gb.jpg"></div>
+          <div class="field wide"><label>Description</label><textarea id="f-description" placeholder="Short product description">${escapeHtml(d.description||'')}</textarea></div>
         </div>
         <div class="form-actions">
           <button class="btn small" id="f-save">Save part</button>
@@ -451,20 +423,21 @@ function renderFormRow(mode){
 }
 
 function readDraftFromForm(){
-  draft.sku = document.getElementById('f-sku').value.trim();
-  draft.name = document.getElementById('f-name').value.trim();
+  draft.product_name = document.getElementById('f-name').value.trim();
+  draft.brand = document.getElementById('f-brand').value.trim();
   draft.category = document.getElementById('f-category').value;
-  draft.location = document.getElementById('f-location').value.trim();
-  draft.qty = parseInt(document.getElementById('f-qty').value,10) || 0;
-  draft.reorderAt = parseInt(document.getElementById('f-reorder').value,10) || 0;
-  draft.unitCost = parseFloat(document.getElementById('f-cost').value) || 0;
+  draft.price = parseFloat(document.getElementById('f-price').value) || 0;
+  draft.model_compatibility = document.getElementById('f-compat').value.trim();
+  draft.stock_quantity = parseInt(document.getElementById('f-qty').value,10) || 0;
+  draft.image = document.getElementById('f-image').value.trim();
+  draft.description = document.getElementById('f-description').value.trim();
 }
 
 function attachListeners(){
   const addBtn = document.getElementById('btn-add');
   if(addBtn) addBtn.onclick = ()=>{
     formMode = 'new';
-    draft = { sku:'', name:'', category:CATEGORIES[0], location:'', qty:0, reorderAt:0, unitCost:0 };
+    draft = { product_name:'', brand:'', category:CATEGORIES[0], model_compatibility:'', price:0, stock_quantity:0, image:'', description:'' };
     render();
   };
 
@@ -474,34 +447,31 @@ function attachListeners(){
 
   const search = document.getElementById('search');
   if(search){
-    search.oninput = ()=>{ searchQuery = search.value; };
-    search.addEventListener('input', debounce(()=>render(), 220));
-    // keep focus after debounce render
+    search.addEventListener('input', debounce(()=>{ searchQuery = search.value; render(); }, 220));
     search.addEventListener('focus', ()=>{ search.setSelectionRange(search.value.length, search.value.length); });
   }
 
   const lowToggle = document.getElementById('low-toggle');
   if(lowToggle) lowToggle.onchange = ()=>{ lowStockOnly = lowToggle.checked; render(); };
 
-  document.querySelectorAll('[data-action="inc"]').forEach(b=>{
-    b.onclick = ()=>{ changeQty(b.dataset.id, 1); };
-  });
-  document.querySelectorAll('[data-action="dec"]').forEach(b=>{
-    b.onclick = ()=>{ changeQty(b.dataset.id, -1); };
-  });
+  document.querySelectorAll('[data-action="inc"]').forEach(b=>{ b.onclick = ()=>changeQty(b.dataset.id, 1); });
+  document.querySelectorAll('[data-action="dec"]').forEach(b=>{ b.onclick = ()=>changeQty(b.dataset.id, -1); });
+
   document.querySelectorAll('[data-action="edit"]').forEach(b=>{
     b.onclick = ()=>{
-      const it = items.find(x=>x.id===b.dataset.id);
+      const it = items.find(x=>x.id==b.dataset.id);
       draft = { ...it };
       formMode = it.id;
       confirmDeleteId = null;
       render();
     };
   });
+
   document.querySelectorAll('[data-action="delete"]').forEach(b=>{
     b.onclick = ()=>{
-      if(confirmDeleteId === b.dataset.id){
-        items = items.filter(x=>x.id!==b.dataset.id);
+      if(confirmDeleteId == b.dataset.id){
+        const id = b.dataset.id;
+        items = items.filter(x=>x.id!=id);
         confirmDeleteId = null;
         persist();
         render();
@@ -516,11 +486,11 @@ function attachListeners(){
   const saveBtn = document.getElementById('f-save');
   if(saveBtn) saveBtn.onclick = ()=>{
     readDraftFromForm();
-    if(!draft.name){ document.getElementById('f-name').focus(); return; }
+    if(!draft.product_name){ document.getElementById('f-name').focus(); return; }
     if(formMode === 'new'){
-      items.push({ id: 'p'+Date.now(), ...draft });
+      items.push({ id: nextId(), ...draft });
     }else{
-      const idx = items.findIndex(x=>x.id===formMode);
+      const idx = items.findIndex(x=>x.id==formMode);
       if(idx>-1) items[idx] = { ...items[idx], ...draft };
     }
     formMode = null;
@@ -532,9 +502,9 @@ function attachListeners(){
 }
 
 function changeQty(id, delta){
-  const it = items.find(x=>x.id===id);
+  const it = items.find(x=>x.id==id);
   if(!it) return;
-  it.qty = Math.max(0, it.qty + delta);
+  it.stock_quantity = Math.max(0, it.stock_quantity + delta);
   persist();
   render();
 }
